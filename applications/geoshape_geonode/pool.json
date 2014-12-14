@@ -86,7 +86,6 @@
 			"basis":{
 				"launch-config":{
 					"name":"geoshape_geonode",
-					"associate-public-ip":true,
 <% if $centos then %>
 	<%= CAP::Config.include("../centos-ami.json") %>,
 <% elsif $ubuntu then %>
