@@ -4,7 +4,6 @@
 			"max-size":1,
 			"associate-public-ip":true,
 
-
 <% if $ubuntu then %>
 			"ssh_user": "ubuntu",
 <% end %>
@@ -67,15 +66,6 @@
 					}
 				]
 <% end %>
-			},
-		    "application_attributes":{
-		            "glusterfs_master_ip": "<%=$glusterfs_master_ip%>",
-<% if $existing_deployment == true then %>
-		            "existing_deployment":true
-<% else %>
-		            "existing_deployment":false
-<% end %>
-
 			},
 		    "vault_access" : [{
 		            "vault" : "geoshape_geonode",
