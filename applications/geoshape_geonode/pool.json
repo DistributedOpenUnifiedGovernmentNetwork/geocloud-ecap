@@ -2,6 +2,9 @@
 			"name":"geonode",
 			"min-size":1,
 			"max-size":1,
+			"associate-public-ip":true,
+
+
 <% if $ubuntu then %>
 			"ssh_user": "ubuntu",
 <% end %>
