@@ -1,6 +1,7 @@
 import requests
 import argparse
 import json
+import time
 
 parser = argparse.ArgumentParser(description='Modify Geoserver default contact',
                                  prog="mod_gs_contact.py", formatter_class=lambda prog: argparse.HelpFormatter(prog,max_help_position=40))
@@ -13,9 +14,14 @@ user = parsed_args.user
 password = parsed_args.password
 url = '{url}/settings/contact.json'.format(url=parsed_args.rest_url)
 
-contact_info_req = requests.get(url, auth=(user, password))
-if contact_info_req.status_code == 200:
-    contact_info = contact_info_req.json()
+for attempt in range(8):
+    try:
+        resp = requests.get(url, auth=(user, password), verify=False)
+    except requests.exceptions.ConnectionError as e:
+        time.sleep(10)
+        continue
+if resp.status_code == 200:
+    contact_info = resp.json()
     print "Got Geoserver Contact Info"
     contact_info['contact']['contactEmail'] = 'support@eglobaltech.com'
     contact_info['contact']['contactOrganization'] = 'eGT'
@@ -26,7 +32,7 @@ if contact_info_req.status_code == 200:
     contact_info['contact']['address'] = 22203
     contact_info['contact']['addressState'] = 'VA'
     contact_info['contact']['addressPostalCode'] = '3865 Wilson Blvd, Suite 500'
-    contact_info['contact']['onlineResource'] = 'www.eglobaltech.com'
+    contact_info['contact']['onlineResource'] = 'www.eglobaltech.com'    
     contact_info = json.dumps(contact_info)
 
     headers = {'content-type': 'application/json'}
@@ -35,6 +41,5 @@ if contact_info_req.status_code == 200:
         print "Updated Geoserver Contact Info"
     else:
         print "failed to update Geoserver Contact Info, See error: {http_error}".format(http_error=update_contact_info.text())
-    
 else:
     print "failed to get Geoserver Contact Info, See error: {http_error}".format(http_error=contact_info.text())
